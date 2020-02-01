@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "513987502158",
+    "firebase_url": "https://nicapp-c44f4.firebaseio.com",
+    "project_id": "nicapp-c44f4",
+    "storage_bucket": "nicapp-c44f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513987502158:android:67997b049521616523e31f",
+        "android_client_info": {
+          "package_name": "com.nicapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513987502158-kgg1sh78b397j63uk2gcj7256rpse1r6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nicapp",
+            "certificate_hash": "469b5e38536323d5d4ba3aabbe3a85a20f683424"
+          }
+        },
+        {
+          "client_id": "513987502158-r97pifh6ceddhcu08ol78b9rma161r6d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nicapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "513987502158-aisv8hs5dh520clh3vpcdqb97cj8la95.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDABJJz67XZd_mFpcBwOGrg6fXCusYWP-M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513987502158-aisv8hs5dh520clh3vpcdqb97cj8la95.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
