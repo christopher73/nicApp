@@ -2,11 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { loginEmail, registerGoogle } from '../../redux/actions/actions';
 import { bindActionCreators } from 'redux';
-import { StyleSheet, ImageBackground, Text, View, TouchableOpacity, TextInput, TextComponent } from 'react-native';
+import {
+  StyleSheet,
+  ImageBackground,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/Foundation';
 import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
 import Hr from 'react-native-hr-component';
+import { loginStyles } from './styles';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 // Somewhere in your code
 
@@ -23,11 +32,12 @@ function Login() {
       // iosClientId: '<FROM DEVELOPER CONSOLE>', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
     });
   });
-  const signIn = async () => {
+  const _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
+      let userInfo = await GoogleSignin.signIn();
+
+      console.log(userInfo.user);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -36,6 +46,7 @@ function Login() {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         // play services not available or outdated
       } else {
+        console.log(error);
         // some other error happened
       }
     }
@@ -43,9 +54,10 @@ function Login() {
   const [email, setEmail] = useState('Your email');
   const [password, setPassword] = useState('Password');
   console.log(email);
+  //https://www.freecodecamp.org/news/how-to-make-your-react-native-app-respond-gracefully-when-the-keyboard-pops-up-7442c1535580/
   return (
-    <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
-      <View style={styles.containerDiv}>
+    <ImageBackground source={require('../../assets/background.jpg')} style={{ width: '100%', height: '100%' }}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.titleDiv}>
           <Text style={styles.titleText}>NORTH</Text>
           <Text style={styles.titleText}>CENTRAL</Text>
@@ -61,6 +73,7 @@ function Login() {
             hrStyles={{ color: 'white' }}
           />
           <TextInput
+            autoFocus={true}
             style={styles.textInput}
             autoCompleteType={'email'}
             onChangeText={text => setEmail(text)}
@@ -68,10 +81,11 @@ function Login() {
             placeholderTextColor="white"
           />
           <TextInput
+            autoFocus={true}
             secureTextEntry={true}
+            autoCorrect={false}
             style={styles.textInput}
             autoCompleteType={'password'}
-            autoCorrect={false}
             onChangeText={text => setPassword(text)}
             placeholder="Password"
             placeholderTextColor="white"
@@ -87,87 +101,17 @@ function Login() {
             textStyles={{ fontSize: 20, marginVertical: 12, color: 'white' }}
             hrStyles={{ color: 'white' }}
           />
-          <TouchableOpacity style={styles.btnGmail} onPress={() => console.log('hello')}>
+          <TouchableOpacity style={styles.btnGmail} onPress={_signIn}>
             <Icon name="google" style={styles.btnIcon} color="white" />
             <Text style={styles.btnText}>CONTINUE WITH GMAIL</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
 
-const styles = StyleSheet.create({
-  backgroundImage: {
-    height: '100%',
-    alignItems: 'center',
-    resizeMode: 'cover' // or 'stretch'
-  },
-  containerDiv: {
-    height: '100%',
-    display: 'flex',
-    width: '70%',
-    justifyContent: 'space-between'
-  },
-  titleDiv: { marginTop: '15%' },
-  titleText: {
-    color: 'white',
-    fontSize: 45,
-    marginTop: '5%',
-    fontWeight: '300',
-    textShadowColor: '#000',
-    textShadowRadius: 40
-  },
-  btnGmail: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'red',
-    paddingVertical: 10,
-    width: '100%',
-    marginBottom: '10%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5
-  },
-
-  buttonDiv: {
-    display: 'flex',
-    alignContent: 'center',
-    justifyContent: 'flex-start'
-  },
-  btnIcon: {
-    paddingRight: 10,
-    fontSize: 27,
-    borderRightWidth: 2,
-    borderColor: 'white'
-  },
-  btnText: {
-    paddingLeft: 10,
-    fontSize: 15,
-    fontWeight: '400',
-    color: '#fff',
-    textAlign: 'center'
-  },
-  textInput: { fontSize: 18, backgroundColor: 'black', opacity: 0.6, marginVertical: 5, color: 'white' },
-  btnEmail: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: 'grey',
-    paddingVertical: 10,
-    width: '100%',
-    marginVertical: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5
-  }
-});
+const styles = StyleSheet.create(loginStyles);
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators({ loginEmail, registerGoogle }, dispatch);
