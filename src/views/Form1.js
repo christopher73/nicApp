@@ -23,7 +23,7 @@ const User = t.struct({
   phone: t.Number,
   medicare: t.Boolean,
   homecare: t.Boolean,
-  transportation: t.Boolean,
+  transportation: t.Boolean
 });
 
 const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
@@ -47,29 +47,29 @@ class Form1 extends Component {
         fields: {
           email: {
             // you can use strings or JSX
-            error: 'Insert a valid email',
+            error: 'Insert a valid email'
           },
           firstName: {
             error: 'Required field!',
-            placeholder: 'Required',
+            placeholder: 'Required'
           },
           lastName: {
             error: 'Required field!',
-            placeholder: 'Required',
+            placeholder: 'Required'
           },
           medicaid: {
             error: 'Required field!',
-            placeholder: 'Required',
+            placeholder: 'Required'
           },
           phone: {
             error: 'Required field!',
-            placeholder: 'Required',
+            placeholder: 'Required'
           },
           medicare: {placeholder: 'Optional'},
           homecare: {placeholder: 'Optional'},
-          transportation: {placeholder: 'Optional'},
-        },
-      },
+          transportation: {placeholder: 'Optional'}
+        }
+      }
     };
   }
   static navigationOptions = {
@@ -82,11 +82,11 @@ class Form1 extends Component {
       <Icon
         style={{
           color: 'white',
-          fontSize: 25,
+          fontSize: 25
         }}
         name="file-text-o"
       />
-    ),
+    )
   };
   handleSubmit = () => {
     const clientInfo = this._form.getValue(); // use that ref to get the form value
@@ -97,7 +97,7 @@ class Form1 extends Component {
       ...clientInfo,
       phone: phone,
       repsName: repsName,
-      repsEmail: repsEmail,
+      repsEmail: repsEmail
     };
     console.log('clientInfo: ', clientData);
     sendForm1(clientData);
@@ -119,7 +119,7 @@ class Form1 extends Component {
                 style={{
                   marginTop: 50,
                   textAlign: 'center',
-                  fontSize: 50,
+                  fontSize: 50
                 }}>
                 Form Sent !
               </Text>
@@ -128,7 +128,7 @@ class Form1 extends Component {
                 style={{
                   color: 'green',
                   fontSize: 100,
-                  textAlign: 'center',
+                  textAlign: 'center'
                 }}
                 name="check-circle"
               />
@@ -166,13 +166,13 @@ class Form1 extends Component {
 
 const styles = StyleSheet.create({
   h1: {
-    marginVertical: 20,
+    marginVertical: 20
   },
   container: {
     flex: 1,
     justifyContent: 'space-evenly',
     padding: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff'
   },
   btnSubmit: {
     backgroundColor: Colors.mainRed,
@@ -182,19 +182,19 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 5,
+    elevation: 5
   },
   btnText: {
     fontSize: 17,
     fontWeight: '400',
     color: '#fff',
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  error: state.error,
+  error: state.error
 });
 
 export default connect(mapStateToProps)(Form1);

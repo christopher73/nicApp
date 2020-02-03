@@ -20,11 +20,11 @@ class Home extends React.Component {
       <Icon
         style={{
           color: 'white',
-          fontSize: 25,
+          fontSize: 25
         }}
         name="home"
       />
-    ),
+    )
   };
   render() {
     console.log('from HOME PAGE ' + this.props.auth.isAuthenticated);
@@ -45,13 +45,11 @@ class Home extends React.Component {
             style={{
               marginHorizontal: 20,
               fontSize: 15,
-              lineHeight: 30,
+              lineHeight: 30
             }}>
             <Text style={{fontWeight: 'bold'}}>INSTRUCTIONS:{'\n'}</Text>
             If you want to submit a form, please click on the upper button
-            {'  '}
             <Icon2 name="menu" />
-            {'  '}
             and select "Forms". Also don't forget to fill out the required
             fields.
           </Text>
@@ -63,48 +61,48 @@ class Home extends React.Component {
 
 const iconStyles = {
   borderRadius: 10,
-  iconStyle: {paddingVertical: 5},
+  iconStyle: {paddingVertical: 5}
 };
 
 const styles = StyleSheet.create({
   content: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-evenly'
   },
   avatar: {
     alignItems: 'center',
-    margin: 20,
+    margin: 20
   },
   avatarImage: {
     borderRadius: 50,
     height: 100,
-    width: 100,
+    width: 100
   },
   header: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-    textTransform: 'capitalize',
+    textTransform: 'capitalize'
   },
   text: {
     textAlign: 'center',
     color: '#333',
-    marginBottom: 5,
+    marginBottom: 5
   },
   buttons: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     margin: 20,
-    marginBottom: 30,
+    marginBottom: 30
   },
   h1: {
-    marginVertical: 20,
+    marginVertical: 20
   },
   container: {
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff'
   },
   btnSubmit: {
     backgroundColor: Colors.mainRed,
@@ -114,19 +112,19 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 5,
+    elevation: 5
   },
   btnText: {
     fontSize: 17,
     fontWeight: '400',
     color: '#fff',
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  error: state.error,
+  error: state.error
 });
 
 export default connect(mapStateToProps)(Home);
