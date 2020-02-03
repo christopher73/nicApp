@@ -1,36 +1,36 @@
 import React from 'react';
-import {createStackNavigator} from 'react-navigation-stack';
-import {createSwitchNavigator, createAppContainer} from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import AppDrawerNavigator from './DrawerContainer';
 import AuthLoadingScreen from './AuthLoadingScreen';
-import Login from '../../views/Login';
+import Login from '../../views/Login/Login';
 
 const AppStack = createStackNavigator(
-  {AppDrawerNavigator},
+  { AppDrawerNavigator },
   {
-    headerMode: 'none',
-  },
+    headerMode: 'none'
+  }
 );
 const AuthStack = createStackNavigator(
   {
     Login: {
       screen: Login,
-      path: 'login',
-    },
+      path: 'login'
+    }
   },
   {
-    headerMode: 'none',
-  },
+    headerMode: 'none'
+  }
 );
 export default createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
       App: AppStack,
-      Auth: AuthStack,
+      Auth: AuthStack
     },
     {
-      initialRouteName: 'Auth',
-    },
-  ),
+      initialRouteName: 'Auth'
+    }
+  )
 );
