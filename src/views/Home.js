@@ -1,7 +1,7 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {Container, Icon as Icon2} from 'native-base';
+import { connect } from 'react-redux';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { Container, Icon as Icon2 } from 'native-base';
 import HeaderNav from '../components/HeaderNav';
 import Colors from '../assets/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -11,11 +11,7 @@ class Home extends React.Component {
     super(props);
   }
   static navigationOptions = {
-    drawerLabel: () => (
-      <Text style={{color: '#fff', fontSize: 20, marginVertical: 20}}>
-        Home
-      </Text>
-    ),
+    drawerLabel: () => <Text style={{ color: '#fff', fontSize: 20, marginVertical: 20 }}>Home</Text>,
     drawerIcon: () => (
       <Icon
         style={{
@@ -28,7 +24,7 @@ class Home extends React.Component {
   };
   render() {
     console.log('from HOME PAGE ' + this.props.auth.isAuthenticated);
-    const {user} = this.props.auth;
+    const { user } = this.props.auth;
     const open = () => this.props.navigation.openDrawer();
     return (
       <Container>
@@ -39,19 +35,18 @@ class Home extends React.Component {
             Welcome,{'\n'} {this.props.auth.isAuthenticated ? user.name : null}!
           </Text>
           <View style={styles.avatar}>
-            <Image source={{uri: user.avatar}} style={styles.avatarImage} />
+            <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
           </View>
           <Text
             style={{
               marginHorizontal: 20,
               fontSize: 15,
               lineHeight: 30
-            }}>
-            <Text style={{fontWeight: 'bold'}}>INSTRUCTIONS:{'\n'}</Text>
-            If you want to submit a form, please click on the upper button
-            <Icon2 name="menu" />
-            and select "Forms". Also don't forget to fill out the required
-            fields.
+            }}
+          >
+            <Text style={{ fontWeight: 'bold' }}>INSTRUCTIONS:{'\n'}</Text>
+            If you want to submit a form, please click on the upper button <Icon2 name="menu" /> and select "Forms". Also don't forget to fill out the
+            required fields.
           </Text>
         </View>
       </Container>
@@ -61,7 +56,7 @@ class Home extends React.Component {
 
 const iconStyles = {
   borderRadius: 10,
-  iconStyle: {paddingVertical: 5}
+  iconStyle: { paddingVertical: 5 }
 };
 
 const styles = StyleSheet.create({
@@ -109,7 +104,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     width: '100%',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5

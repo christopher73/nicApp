@@ -20,7 +20,7 @@ export const sendForm = data => dispatch => {
     });
 };
 //login user
-export const loginEmail = response => dispatch => {
+export const registerUser = response => dispatch => {
   console.log(`from actionsJS ${JSON.stringify(response)}`);
   dispatch(setCurrentUser(response));
 };
