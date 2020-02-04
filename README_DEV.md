@@ -1,3 +1,7 @@
+Articles :
+
+- https://dev.to/amanhimself/implement-firebase-phone-authentication-in-react-native-apps-4ho4
+
 `keytool -genkeypair -v -keystore my-upload-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000`
 
 ## DEBUG
