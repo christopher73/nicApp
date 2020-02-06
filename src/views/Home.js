@@ -35,7 +35,7 @@ class Home extends React.Component {
             Welcome,{'\n'} {this.props.auth.isAuthenticated ? user.name : null}!
           </Text>
           <View style={styles.avatar}>
-            <Image source={{ uri: user.avatar }} style={styles.avatarImage} />
+            <Image source={{ uri: user.photo }} style={styles.avatarImage} />
           </View>
           <Text
             style={{

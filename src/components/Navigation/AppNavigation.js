@@ -4,7 +4,7 @@ import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import AppDrawerNavigator from './DrawerContainer';
 import AuthLoadingScreen from './AuthLoadingScreen';
 import Login from '../../views/Login/Login';
-
+import PhoneAuth from '../PhoneAuth';
 const AppStack = createStackNavigator(
   { AppDrawerNavigator },
   {
@@ -15,6 +15,7 @@ const AuthStack = createStackNavigator(
   {
     Login: {
       screen: Login,
+      // screen: PhoneAuth,
       path: 'login'
     }
   },

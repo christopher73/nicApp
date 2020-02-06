@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { StyleSheet, ImageBackground, Text, View, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
+import firebase from 'react-native-firebase';
 import Hr from 'react-native-hr-component';
 import { loginStyles } from './styles';
 function Login({ registerUser, navigation }) {
@@ -32,6 +33,11 @@ function Login({ registerUser, navigation }) {
     try {
       await GoogleSignin.hasPlayServices();
       let userInfo = await GoogleSignin.signIn();
+      //firebase
+      const credential = firebase.auth.GoogleAuthProvider.credential(userInfo.idToken, userInfo.accessToken);
+      const firebaseUserCredential = await firebase.auth().signInWithCredential(credential);
+      console.warn(JSON.stringify(firebaseUserCredential.user.toJSON(), null, 2));
+
       registerUser(userInfo.user);
       navigation.navigate('AuthLoading');
       console.log(userInfo.user);
