@@ -37,10 +37,41 @@ function Login({ registerUser, navigation }) {
       const credential = firebase.auth.GoogleAuthProvider.credential(userInfo.idToken, userInfo.accessToken);
       const firebaseUserCredential = await firebase.auth().signInWithCredential(credential);
       console.warn(JSON.stringify(firebaseUserCredential.user.toJSON(), null, 2));
-
-      registerUser(userInfo.user);
-      navigation.navigate('AuthLoading');
-      console.log(userInfo.user);
+      firebase
+        .auth()
+        .verifyPhoneNumber('+13473931012')
+        .on(
+          'state_changed',
+          phoneAuthSnapshot => {
+            switch (phoneAuthSnapshot.state) {
+              case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
+                console.log('code sent');
+                break;
+              case firebase.auth.PhoneAuthState.ERROR: // or 'error'
+                console.log('verification error');
+                console.log(phoneAuthSnapshot.error);
+                break;
+              case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT: // or 'timeout'
+                console.log('auto verify on android timed out');
+                break;
+              case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
+                console.log('auto verified on android');
+                console.log(phoneAuthSnapshot);
+                //await firebase.auth().upd //try to update
+                break;
+            }
+          },
+          error => {
+            console.log(error);
+            console.log(error.verificationId);
+          },
+          phoneAuthSnapshot => {
+            console.log(phoneAuthSnapshot);
+          }
+        );
+      //registerUser(userInfo.user);
+      //navigation.navigate('AuthLoading');
+      //console.log(userInfo.user);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow

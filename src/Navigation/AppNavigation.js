@@ -3,8 +3,8 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import AppDrawerNavigator from './DrawerContainer';
 import AuthLoadingScreen from './AuthLoadingScreen';
-import Login from '../../views/Login/Login';
-import PhoneAuth from '../PhoneAuth';
+import Login from '../views/Login/Login';
+import PhoneAuth from '../components/PhoneAuth';
 const AppStack = createStackNavigator(
   { AppDrawerNavigator },
   {
@@ -15,7 +15,7 @@ const AuthStack = createStackNavigator(
   {
     Login: {
       screen: Login,
-      // screen: PhoneAuth,
+      //screen: PhoneAuth,
       path: 'login'
     }
   },

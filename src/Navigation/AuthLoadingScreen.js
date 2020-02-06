@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { loginEmail, registerGoogle } from '../../redux/actions/actions';
+import { loginEmail, registerGoogle } from '../redux/actions/actions';
 import { bindActionCreators } from 'redux';
 import { ActivityIndicator, StatusBar, StyleSheet, View, Linking } from 'react-native';
 

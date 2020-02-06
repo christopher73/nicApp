@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { SafeAreaView, StyleSheet, View, ScrollView } from 'react-native';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 
-import Home from '../../views/Home';
-import Form1 from '../../views/Form1';
-import Colors from '../../assets/Colors';
-import Logout from '../Logout';
+import Home from '../views/Home';
+import Form1 from '../views/Form1';
+import Colors from '../assets/Colors';
+import Logout from '../components/Logout';
 import { Text } from 'native-base';
 
 const CustomDrawerComponent = props => {

@@ -1,7 +1,7 @@
 import React from 'react';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import store from './src/redux/store/store';
-import AppNavigation from './src/components/Navigation/AppNavigation';
+import AppNavigation from './src/Navigation/AppNavigation';
 // import config from './config';
 // console.log(config.API_URL);
 // console.log(config.ANALYTICS_KEY);
