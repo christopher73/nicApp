@@ -10,13 +10,14 @@ import Hr from 'react-native-hr-component';
 import { loginStyles } from './styles';
 
 function Login({ registerUser, navigation }) {
-  const [email, setEmail] = useState('Your email');
-  const [password, setPassword] = useState('Password');
+  // const [email, setEmail] = useState('Your email'); // Will use for email/password only
+  // const [password, setPassword] = useState('Password');
 
   const [number, setNumber] = useState('Your Number');
   const [showSMS, setShowSMS] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
+  const sleep = m => new Promise(r => setTimeout(r, m)); // sets delay
 
   const GOOGLECLIENTID = '513987502158-aisv8hs5dh520clh3vpcdqb97cj8la95.apps.googleusercontent.com';
   const keyboardWillShow = () => setShowTitle(false);
@@ -35,46 +36,6 @@ function Login({ registerUser, navigation }) {
     };
   }, [showTitle]);
 
-  const _smsAuth = async phoneNumber =>
-    await firebase
-      .auth()
-      .verifyPhoneNumber(phoneNumber)
-      .on(
-        'state_changed',
-        phoneAuthSnapshot => {
-          switch (phoneAuthSnapshot.state) {
-            case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
-              console.log('code sent');
-              break;
-            case firebase.auth.PhoneAuthState.ERROR: // or 'error'
-              console.log('verification error');
-              console.log(phoneAuthSnapshot.error);
-              break;
-            case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT: // or 'timeout'
-              console.log('auto verify on android timed out');
-              break;
-            case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
-              console.log('auto verified on android');
-              console.log(phoneAuthSnapshot);
-              const { verificationId, code } = phoneAuthSnapshot;
-              const cred = firebase.auth.PhoneAuthProvider.credential(verificationId, code);
-              firebase.auth().currentUser.linkWithCredential(cred);
-              setIsVerified(true);
-              // Do something with your new credential, e.g.:
-              //firebase.auth().signInWithCredential(credential);
-
-              navigation.navigate('AuthLoading');
-              break;
-          }
-        },
-        error => {
-          console.log(error);
-          console.log(error.verificationId);
-        },
-        phoneAuthSnapshot => {
-          console.log(phoneAuthSnapshot);
-        }
-      );
   const _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -102,18 +63,18 @@ function Login({ registerUser, navigation }) {
       }
     }
   };
-  const _signIn2 = async (email, password) => {
-    try {
-      const firebaseUser = await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, `+${password}`);
+  // const _signIn2 = async (email, password) => {
+  //   try {
+  //     const firebaseUser = await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, `+${password}`);
 
-      console.warn(JSON.stringify(firebaseUser.user.toJSON(), null, 2));
+  //     console.warn(JSON.stringify(firebaseUser.user.toJSON(), null, 2));
 
-      registerUser(firebaseUser);
-      setShowSMS(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     registerUser(firebaseUser);
+  //     setShowSMS(true);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   //https://www.freecodecamp.org/news/how-to-make-your-react-native-app-respond-gracefully-when-the-keyboard-pops-up-7442c1535580/
   return (
     <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
@@ -123,7 +84,8 @@ function Login({ registerUser, navigation }) {
             style={{
               marginTop: 50,
               textAlign: 'center',
-              fontSize: 50
+              fontSize: 60,
+              color: 'white'
             }}
           >
             Account Verified
@@ -131,7 +93,7 @@ function Login({ registerUser, navigation }) {
           <Icon
             style={{
               color: 'green',
-              fontSize: 100,
+              fontSize: 140,
               textAlign: 'center'
             }}
             name="check-circle"
