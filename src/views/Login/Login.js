@@ -8,10 +8,16 @@ import { GoogleSignin, statusCodes } from '@react-native-community/google-signin
 import firebase from 'react-native-firebase';
 import Hr from 'react-native-hr-component';
 import { loginStyles } from './styles';
+
 function Login({ registerUser, navigation }) {
   const [email, setEmail] = useState('Your email');
   const [password, setPassword] = useState('Password');
+
+  const [number, setNumber] = useState('Your Number');
+  const [showSMS, setShowSMS] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
+
   const GOOGLECLIENTID = '513987502158-aisv8hs5dh520clh3vpcdqb97cj8la95.apps.googleusercontent.com';
   const keyboardWillShow = () => setShowTitle(false);
   const keyboardWillHide = () => setShowTitle(true);
@@ -29,54 +35,60 @@ function Login({ registerUser, navigation }) {
     };
   }, [showTitle]);
 
+  const _smsAuth = async phoneNumber =>
+    await firebase
+      .auth()
+      .verifyPhoneNumber(phoneNumber)
+      .on(
+        'state_changed',
+        phoneAuthSnapshot => {
+          switch (phoneAuthSnapshot.state) {
+            case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
+              console.log('code sent');
+              break;
+            case firebase.auth.PhoneAuthState.ERROR: // or 'error'
+              console.log('verification error');
+              console.log(phoneAuthSnapshot.error);
+              break;
+            case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT: // or 'timeout'
+              console.log('auto verify on android timed out');
+              break;
+            case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
+              console.log('auto verified on android');
+              console.log(phoneAuthSnapshot);
+              const { verificationId, code } = phoneAuthSnapshot;
+              const cred = firebase.auth.PhoneAuthProvider.credential(verificationId, code);
+              firebase.auth().currentUser.linkWithCredential(cred);
+              setIsVerified(true);
+              // Do something with your new credential, e.g.:
+              //firebase.auth().signInWithCredential(credential);
+
+              navigation.navigate('AuthLoading');
+              break;
+          }
+        },
+        error => {
+          console.log(error);
+          console.log(error.verificationId);
+        },
+        phoneAuthSnapshot => {
+          console.log(phoneAuthSnapshot);
+        }
+      );
   const _signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       let userInfo = await GoogleSignin.signIn();
       //firebase
       const credential = firebase.auth.GoogleAuthProvider.credential(userInfo.idToken, userInfo.accessToken);
+      console.log(credential);
       const firebaseUserCredential = await firebase.auth().signInWithCredential(credential);
-      console.warn(JSON.stringify(firebaseUserCredential.user.toJSON(), null, 2));
-      await firebase
-        .auth()
-        .verifyPhoneNumber('+13473931012')
-        .on(
-          'state_changed',
-          phoneAuthSnapshot => {
-            switch (phoneAuthSnapshot.state) {
-              case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
-                console.log('code sent');
-                break;
-              case firebase.auth.PhoneAuthState.ERROR: // or 'error'
-                console.log('verification error');
-                console.log(phoneAuthSnapshot.error);
-                break;
-              case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT: // or 'timeout'
-                console.log('auto verify on android timed out');
-                break;
-              case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
-                console.log('auto verified on android');
-                console.log(phoneAuthSnapshot);
-                const { verificationId, code } = phoneAuthSnapshot;
-                const cred = firebase.auth.PhoneAuthProvider.credential(verificationId, code);
 
-                // Do something with your new credential, e.g.:
-                //firebase.auth().signInWithCredential(credential);
-                firebase.auth().currentUser.linkWithCredential(cred);
-                break;
-            }
-          },
-          error => {
-            console.log(error);
-            console.log(error.verificationId);
-          },
-          phoneAuthSnapshot => {
-            console.log(phoneAuthSnapshot);
-          }
-        );
-      //registerUser(userInfo.user);
-      //navigation.navigate('AuthLoading');
-      //console.log(userInfo.user);
+      console.warn(JSON.stringify(firebaseUserCredential.user.toJSON(), null, 2));
+
+      registerUser(userInfo.user);
+      setShowSMS(true);
+      console.log(userInfo.user);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -90,62 +102,93 @@ function Login({ registerUser, navigation }) {
       }
     }
   };
+  const _signIn2 = async (email, password) => {
+    try {
+      const firebaseUser = await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, `+${password}`);
 
+      console.warn(JSON.stringify(firebaseUser.user.toJSON(), null, 2));
+
+      registerUser(firebaseUser);
+      setShowSMS(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //https://www.freecodecamp.org/news/how-to-make-your-react-native-app-respond-gracefully-when-the-keyboard-pops-up-7442c1535580/
   return (
     <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
-      <View style={styles.containerDiv}>
-        {showTitle ? (
-          <View style={styles.titleDiv}>
-            <Text style={styles.titleText}>NORTH</Text>
-            <Text style={styles.titleText}>CENTRAL</Text>
-            <Text style={styles.titleText}>CONSULTING</Text>
-          </View>
-        ) : null}
-        <View style={styles.buttonDiv}>
-          <Hr
-            text="Sign in"
-            fontSize={5}
-            lineColor="#eee"
-            textPadding={5}
-            textStyles={{ fontSize: 20, marginVertical: 12, color: 'white' }}
-            hrStyles={{ color: 'white' }}
+      {isVerified ? (
+        <View style={styles.containerDiv}>
+          <Text
+            style={{
+              marginTop: 50,
+              textAlign: 'center',
+              fontSize: 50
+            }}
+          >
+            Account Verified
+          </Text>
+          <Icon
+            style={{
+              color: 'green',
+              fontSize: 100,
+              textAlign: 'center'
+            }}
+            name="check-circle"
           />
-          <TextInput
-            onSubmitEditing={Keyboard.dismiss}
-            style={styles.textInput}
-            autoCompleteType={'email'}
-            onChangeText={text => setEmail(text)}
-            placeholder="Your email"
-            placeholderTextColor="white"
-          />
-          <TextInput
-            onSubmitEditing={Keyboard.dismiss}
-            secureTextEntry={true}
-            autoCorrect={false}
-            style={styles.textInput}
-            autoCompleteType={'password'}
-            onChangeText={text => setPassword(text)}
-            placeholder="Password"
-            placeholderTextColor="white"
-          />
-          <TouchableOpacity style={styles.btnEmail} onPress={() => console.log('hello')}>
-            <Text style={styles.btnText}>SIGN IN</Text>
-          </TouchableOpacity>
-          <Hr
-            text="or"
-            fontSize={5}
-            lineColor="#eee"
-            textPadding={5}
-            textStyles={{ fontSize: 20, marginVertical: 12, color: 'white' }}
-            hrStyles={{ color: 'white' }}
-          />
-          <TouchableOpacity style={styles.btnGmail} onPress={_signIn}>
-            <Icon name="google" style={styles.btnIcon} color="white" />
-            <Text style={styles.btnText}>CONTINUE WITH GMAIL</Text>
-          </TouchableOpacity>
         </View>
-      </View>
+      ) : (
+        <View style={styles.containerDiv}>
+          {showTitle ? (
+            <View style={styles.titleDiv}>
+              <Text style={styles.titleText}>NORTH</Text>
+              <Text style={styles.titleText}>CENTRAL</Text>
+              <Text style={styles.titleText}>CONSULTING</Text>
+            </View>
+          ) : null}
+          {showSMS ? (
+            <View style={styles.buttonDiv}>
+              <Hr
+                text="Verify Number"
+                fontSize={5}
+                lineColor="#eee"
+                textPadding={5}
+                textStyles={{ fontSize: 20, marginVertical: 12, color: 'white' }}
+                hrStyles={{ color: 'white' }}
+              />
+              <TextInput
+                onSubmitEditing={Keyboard.dismiss}
+                style={styles.textInput}
+                autoCompleteType={'tel'}
+                onChangeText={text => setNumber(text)}
+                placeholder="Your Phone Number"
+                placeholderTextColor="white"
+              />
+              <TouchableOpacity style={styles.btnEmail} onPress={() => _smsAuth(number)}>
+                <Text style={styles.btnText}>SEND</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.buttonDiv}>
+              <Hr
+                text=" Continue with "
+                fontSize={5}
+                lineColor="#eee"
+                textPadding={5}
+                textStyles={{ fontSize: 20, marginVertical: 12, color: 'white' }}
+                hrStyles={{ color: 'white' }}
+              />
+
+              <TouchableOpacity style={styles.btnGmail} onPress={_signIn}>
+                <Text style={styles.btnText}>
+                  <Icon name="google" style={styles.btnIcon} color="white" />
+                  {'   |     '} GMAIL
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      )}
     </ImageBackground>
   );
 }
@@ -172,3 +215,34 @@ export default connect(mapStateToProps, mapDispatchToProps)(Login);
 // forceConsentPrompt: true, // [Android] if you want to show the authorization prompt at each login.
 // accountName: '', // [Android] specifies an account name on the device that should be used
 // iosClientId: '<FROM DEVELOPER CONSOLE>', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+
+//TODO!!!
+//  <TextInput
+//   onSubmitEditing={Keyboard.dismiss}
+//   style={styles.textInput}
+//   autoCompleteType={'email'}
+//   onChangeText={text => setEmail(text)}
+//   placeholder="Your email"
+//   placeholderTextColor="white"
+// />
+// <TextInput
+//   onSubmitEditing={Keyboard.dismiss}
+//   secureTextEntry={true}
+//   autoCorrect={false}
+//   style={styles.textInput}
+//   autoCompleteType={'password'}
+//   onChangeText={text => setPassword(text)}
+//   placeholder="Password"
+//   placeholderTextColor="white"
+// />
+// <TouchableOpacity style={styles.btnEmail} onPress={() => _signIn2(email, password)}>
+//   <Text style={styles.btnText}>SIGN IN</Text>
+// </TouchableOpacity>
+// <Hr
+//   text="or"
+//   fontSize={5}
+//   lineColor="#eee"
+//   textPadding={5}
+//   textStyles={{ fontSize: 20, marginVertical: 12, color: 'white' }}
+//   hrStyles={{ color: 'white' }}
+// />

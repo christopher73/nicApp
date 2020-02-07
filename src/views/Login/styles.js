@@ -22,9 +22,10 @@ export const loginStyles = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignContent: 'center',
     alignItems: 'center',
     backgroundColor: 'red',
-    paddingVertical: 10,
+    paddingVertical: 5,
     width: '100%',
     marginBottom: '10%',
     shadowColor: '#000',
@@ -34,21 +35,17 @@ export const loginStyles = {
     elevation: 5
   },
 
-  buttonDiv: {
-    display: 'flex',
-    alignContent: 'center',
-    justifyContent: 'flex-start'
-  },
-  btnIcon: {
-    paddingRight: 10,
-    fontSize: 27,
-    borderRightWidth: 2,
-    borderColor: 'white'
-  },
+  // buttonDiv: {
+  //   display: 'flex',
+  //   alignContent: 'center',
+  //   justifyContent: 'flex-start'
+  // },
+  btnIcon: { fontSize: 27 },
   btnText: {
-    paddingLeft: 10,
-    fontSize: 15,
-    fontWeight: '400',
+    height: '100%',
+    width: '100%',
+    fontSize: 27,
+    fontWeight: '300',
     color: '#fff',
     textAlign: 'center'
   },
@@ -58,7 +55,7 @@ export const loginStyles = {
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: 'grey',
-    paddingVertical: 10,
+    paddingVertical: 7,
     width: '100%',
     marginVertical: 5,
     shadowColor: '#000',
