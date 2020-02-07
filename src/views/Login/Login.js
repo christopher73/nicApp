@@ -37,7 +37,7 @@ function Login({ registerUser, navigation }) {
       const credential = firebase.auth.GoogleAuthProvider.credential(userInfo.idToken, userInfo.accessToken);
       const firebaseUserCredential = await firebase.auth().signInWithCredential(credential);
       console.warn(JSON.stringify(firebaseUserCredential.user.toJSON(), null, 2));
-      firebase
+      await firebase
         .auth()
         .verifyPhoneNumber('+13473931012')
         .on(
@@ -57,7 +57,12 @@ function Login({ registerUser, navigation }) {
               case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
                 console.log('auto verified on android');
                 console.log(phoneAuthSnapshot);
-                //await firebase.auth().upd //try to update
+                const { verificationId, code } = phoneAuthSnapshot;
+                const cred = firebase.auth.PhoneAuthProvider.credential(verificationId, code);
+
+                // Do something with your new credential, e.g.:
+                //firebase.auth().signInWithCredential(credential);
+                firebase.auth().currentUser.linkWithCredential(cred);
                 break;
             }
           },
