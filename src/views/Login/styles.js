@@ -18,43 +18,14 @@ export const loginStyles = {
     textShadowColor: '#000',
     textShadowRadius: 40
   },
-  btnGmail: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'red',
-    paddingVertical: 5,
-    width: '100%',
-    marginBottom: '10%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5
-  },
 
-  // buttonDiv: {
-  //   display: 'flex',
-  //   alignContent: 'center',
-  //   justifyContent: 'flex-start'
-  // },
-  btnIcon: { fontSize: 27 },
-  btnText: {
-    height: '100%',
-    width: '100%',
-    fontSize: 27,
-    fontWeight: '300',
-    color: '#fff',
-    textAlign: 'center'
-  },
-  textInput: { fontSize: 18, backgroundColor: 'black', opacity: 0.6, marginVertical: 5, color: 'white' },
-  btnEmail: {
+  btnIcon: { width: '30%', height: '100%', textAlign: 'center', fontSize: 33 },
+  btnText: { width: '70%', fontSize: 27, fontWeight: '100', color: '#fff', borderLeftColor: '#fff', borderLeftWidth: 2, textAlign: 'center' },
+  authButton: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: 'grey',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     paddingVertical: 7,
     width: '100%',
     marginVertical: 5,
@@ -63,5 +34,6 @@ export const loginStyles = {
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5
-  }
+  },
+  textInput: { fontSize: 18, backgroundColor: 'black', opacity: 0.6, marginVertical: 5, color: 'white' }
 };

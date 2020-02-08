@@ -27,7 +27,7 @@ export default class HeaderNav extends React.Component {
           </Title>
         </Body>
         <Right style={{ flex: 1 }}>
-          <Icon style={{ color: '#000', marginRight: 15 }} name="menu" onPress={() => this.props.open()} />
+          <Icon style={{ color: '#000', marginRight: 15 }} fontSize={70} name="menu" onPress={() => this.props.open()} />
         </Right>
       </Header>
     );

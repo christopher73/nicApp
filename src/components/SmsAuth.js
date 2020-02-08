@@ -1,14 +1,20 @@
-import React, { Component } from 'react';
-import { View, Button, Text, TextInput, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import firebase from 'react-native-firebase';
+import Hr from 'react-native-hr-component';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-function PhoneAuth2(number, setNumber) {
-  // const [number, setNumber] = useState('Your Number');
-
+export default function SmsAuth({ auth, styles, setIsVerified, navigation }) {
+  const [number, setNumber] = useState('Your Number');
+  const sleep = m => new Promise(r => setTimeout(r, m)); // sets delay
+  console.log('from sms : ' + JSON.stringify(auth));
+  // useEffect(() => {
+  //   auth.smsNumber === null ? null : navigation.navigate('AuthLoading');
+  // }, [auth]);
   const _smsAuth = async phoneNumber => {
     await firebase
       .auth()
-      .verifyPhoneNumber(phoneNumber)
+      .verifyPhoneNumber(`${phoneNumber}`)
       .on(
         'state_changed',
         phoneAuthSnapshot => {
@@ -48,7 +54,8 @@ function PhoneAuth2(number, setNumber) {
     await sleep(2000);
     navigation.navigate('AuthLoading');
   };
-  return (
+
+  return auth.user.smsNumber === null ? (
     <View style={styles.buttonDiv}>
       <Hr
         text="Verify Number"
@@ -66,9 +73,12 @@ function PhoneAuth2(number, setNumber) {
         placeholder="Your Phone Number"
         placeholderTextColor="white"
       />
-      <TouchableOpacity style={styles.btnEmail} onPress={() => _smsAuth(number)}>
-        <Text style={styles.btnText}>SEND</Text>
+      <TouchableOpacity style={{ ...styles.authButton, backgroundColor: 'rgba(0, 255, 0, 0.6)' }} onPress={() => _smsAuth(number)}>
+        <Icon name="sms" style={styles.btnIcon} color="white" />
+        <Text style={styles.btnText}>Send</Text>
       </TouchableOpacity>
     </View>
+  ) : (
+    navigation.navigate('AuthLoading')
   );
 }

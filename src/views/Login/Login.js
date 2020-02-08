@@ -2,103 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { registerUser } from '../../redux/actions/actions';
 import { bindActionCreators } from 'redux';
-import { StyleSheet, ImageBackground, Text, View, TouchableOpacity, TextInput, Keyboard } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
-import firebase from 'react-native-firebase';
-import Hr from 'react-native-hr-component';
+import { StyleSheet, ImageBackground, Text, View, Keyboard } from 'react-native';
 import { loginStyles } from './styles';
-
-function Login({ registerUser, navigation }) {
+import SocialAuth from '../../components/SocialAuth';
+import SmsAuth from '../../components/SmsAuth';
+import VerifiedMessage from '../../components/VerifiedMessage';
+import EmailAuth from '../../components/EmailAuth';
+function Login({ registerUser, navigation, auth, error }) {
   // const [email, setEmail] = useState('Your email'); // Will use for email/password only
   // const [password, setPassword] = useState('Password');
-
-  const [number, setNumber] = useState('Your Number');
+  //console.log('from login ' + JSON.stringify(auth));
   const [showSMS, setShowSMS] = useState(false);
   const [showTitle, setShowTitle] = useState(true);
   const [isVerified, setIsVerified] = useState(false);
-  const sleep = m => new Promise(r => setTimeout(r, m)); // sets delay
-
-  const GOOGLECLIENTID = '513987502158-aisv8hs5dh520clh3vpcdqb97cj8la95.apps.googleusercontent.com';
   const keyboardWillShow = () => setShowTitle(false);
   const keyboardWillHide = () => setShowTitle(true);
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: GOOGLECLIENTID,
-      offlineAccess: true
-    });
     const keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', keyboardWillShow);
     const keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', keyboardWillHide);
     return () => {
       keyboardWillShowSub.remove();
       keyboardWillHideSub.remove();
     };
-  }, [showTitle]);
-
-  const _signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      let userInfo = await GoogleSignin.signIn();
-      //firebase
-      const credential = firebase.auth.GoogleAuthProvider.credential(userInfo.idToken, userInfo.accessToken);
-      console.log(credential);
-      const firebaseUserCredential = await firebase.auth().signInWithCredential(credential);
-
-      console.warn(JSON.stringify(firebaseUserCredential.user.toJSON(), null, 2));
-
-      registerUser(userInfo.user);
-      setShowSMS(true);
-      console.log(userInfo.user);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-      } else {
-        console.log(error);
-        // some other error happened
-      }
-    }
-  };
-  // const _signIn2 = async (email, password) => {
-  //   try {
-  //     const firebaseUser = await firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, `+${password}`);
-
-  //     console.warn(JSON.stringify(firebaseUser.user.toJSON(), null, 2));
-
-  //     registerUser(firebaseUser);
-  //     setShowSMS(true);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  }, [showTitle, auth]);
   //https://www.freecodecamp.org/news/how-to-make-your-react-native-app-respond-gracefully-when-the-keyboard-pops-up-7442c1535580/
   return (
     <ImageBackground source={require('../../assets/background.jpg')} style={styles.backgroundImage}>
       {isVerified ? (
-        <View style={styles.containerDiv}>
-          <Text
-            style={{
-              marginTop: 50,
-              textAlign: 'center',
-              fontSize: 60,
-              color: 'white'
-            }}
-          >
-            Account Verified
-          </Text>
-          <Icon
-            style={{
-              color: 'green',
-              fontSize: 140,
-              textAlign: 'center'
-            }}
-            name="check-circle"
-          />
-        </View>
+        <VerifiedMessage {...{ styles }} />
       ) : (
         <View style={styles.containerDiv}>
           {showTitle ? (
@@ -108,47 +40,7 @@ function Login({ registerUser, navigation }) {
               <Text style={styles.titleText}>CONSULTING</Text>
             </View>
           ) : null}
-          {showSMS ? (
-            <View style={styles.buttonDiv}>
-              <Hr
-                text="Verify Number"
-                fontSize={5}
-                lineColor="#eee"
-                textPadding={5}
-                textStyles={{ fontSize: 20, marginVertical: 12, color: 'white' }}
-                hrStyles={{ color: 'white' }}
-              />
-              <TextInput
-                onSubmitEditing={Keyboard.dismiss}
-                style={styles.textInput}
-                autoCompleteType={'tel'}
-                onChangeText={text => setNumber(text)}
-                placeholder="Your Phone Number"
-                placeholderTextColor="white"
-              />
-              <TouchableOpacity style={styles.btnEmail} onPress={() => _smsAuth(number)}>
-                <Text style={styles.btnText}>SEND</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={styles.buttonDiv}>
-              <Hr
-                text=" Continue with "
-                fontSize={5}
-                lineColor="#eee"
-                textPadding={5}
-                textStyles={{ fontSize: 20, marginVertical: 12, color: 'white' }}
-                hrStyles={{ color: 'white' }}
-              />
-
-              <TouchableOpacity style={styles.btnGmail} onPress={_signIn}>
-                <Text style={styles.btnText}>
-                  <Icon name="google" style={styles.btnIcon} color="white" />
-                  {'   |     '} GMAIL
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          {showSMS ? <SmsAuth {...{ auth, styles, setIsVerified, navigation }} /> : <SocialAuth {...{ styles, setShowSMS, registerUser }} />}
         </View>
       )}
     </ImageBackground>

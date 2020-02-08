@@ -28,7 +28,7 @@ const CustomDrawerComponent = props => {
         <Text style={styles.titleText}>{'north'.toUpperCase()} </Text>
         <Text style={styles.titleText}>{'insurance'.toUpperCase()}</Text>
         <Text style={styles.titleText}>{'consulting'.toUpperCase()}</Text>
-        <Text style={styles.greetingText}>{`Welcome,\n${props.auth.isAuthenticated ? props.auth.user.name.split(' ')[0] : null}`} </Text>
+        <Text style={styles.greetingText}>{`Welcome,\n${props.auth.isAuthenticated ? props.auth.user.displayName.split(' ')[0] : null}`} </Text>
       </View>
       <ScrollView>
         <DrawerItems {...props}></DrawerItems>

@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
-import {H1, Container, Content} from 'native-base';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { H1, Container, Content } from 'native-base';
 import HeaderNav from '../components/HeaderNav';
 import Colors from '../assets/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import t from 'tcomb-form-native'; // 0.6.9
-import {sendForm1} from '../utils/sendForms';
+import { sendForm1 } from '../utils/sendForms';
 const _ = require('lodash');
 /* 
 ONLINE HELP :
@@ -23,7 +23,8 @@ const User = t.struct({
   phone: t.Number,
   medicare: t.Boolean,
   homecare: t.Boolean,
-  transportation: t.Boolean
+  transportation: t.Boolean,
+  comment: t.String
 });
 
 const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
@@ -65,19 +66,18 @@ class Form1 extends Component {
             error: 'Required field!',
             placeholder: 'Required'
           },
-          medicare: {placeholder: 'Optional'},
-          homecare: {placeholder: 'Optional'},
-          transportation: {placeholder: 'Optional'}
+          medicare: { placeholder: 'Optional' },
+          homecare: { placeholder: 'Optional' },
+          transportation: { placeholder: 'Optional' },
+          comment: {
+            placeholder: 'Optional'
+          }
         }
       }
     };
   }
   static navigationOptions = {
-    drawerLabel: () => (
-      <Text style={{color: '#fff', fontSize: 20, marginVertical: 20}}>
-        Forms
-      </Text>
-    ),
+    drawerLabel: () => <Text style={{ color: '#fff', fontSize: 20, marginVertical: 20 }}>Forms</Text>,
     drawerIcon: () => (
       <Icon
         style={{
@@ -101,10 +101,10 @@ class Form1 extends Component {
     };
     console.log('clientInfo: ', clientData);
     sendForm1(clientData);
-    clientInfo ? this.setState({sent: true}) : null;
+    clientInfo ? this.setState({ sent: true }) : null;
   };
   handleSubmitAgain = () => {
-    this.setState({value: null, sent: false});
+    this.setState({ value: null, sent: false });
   };
   render() {
     const open = () => this.props.navigation.openDrawer();
@@ -120,7 +120,8 @@ class Form1 extends Component {
                   marginTop: 50,
                   textAlign: 'center',
                   fontSize: 50
-                }}>
+                }}
+              >
                 Form Sent !
               </Text>
 
@@ -133,27 +134,16 @@ class Form1 extends Component {
                 name="check-circle"
               />
 
-              <H1 style={{...styles.h1, textAlign: 'center'}}>
-                Do you want to send another Form ?
-              </H1>
-              <TouchableOpacity
-                style={styles.btnSubmit}
-                onPress={this.handleSubmitAgain}>
+              <H1 style={{ ...styles.h1, textAlign: 'center' }}>Do you want to send another Form ?</H1>
+              <TouchableOpacity style={styles.btnSubmit} onPress={this.handleSubmitAgain}>
                 <Text style={styles.btnText}>Yes</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.container}>
               <H1 style={styles.h1}>Please complete the form.</H1>
-              <Form
-                ref={c => (this._form = c)}
-                type={User}
-                value={this.state.value}
-                options={this.state.options}
-              />
-              <TouchableOpacity
-                style={styles.btnSubmit}
-                onPress={this.handleSubmit}>
+              <Form ref={c => (this._form = c)} type={User} value={this.state.value} options={this.state.options} />
+              <TouchableOpacity style={styles.btnSubmit} onPress={this.handleSubmit}>
                 <Text style={styles.btnText}>Submit</Text>
               </TouchableOpacity>
             </View>
@@ -179,7 +169,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     width: '100%',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5

@@ -32,10 +32,10 @@ class Home extends React.Component {
 
         <View style={styles.content}>
           <Text style={styles.header}>
-            Welcome,{'\n'} {this.props.auth.isAuthenticated ? user.name : null}!
+            Welcome,{'\n'} {this.props.auth.isAuthenticated ? user.displayName : null}!
           </Text>
           <View style={styles.avatar}>
-            <Image source={{ uri: user.photo }} style={styles.avatarImage} />
+            <Image source={{ uri: user.photoURL }} style={styles.avatarImage} />
           </View>
           <Text
             style={{
@@ -45,8 +45,8 @@ class Home extends React.Component {
             }}
           >
             <Text style={{ fontWeight: 'bold' }}>INSTRUCTIONS:{'\n'}</Text>
-            If you want to submit a form, please click on the upper button <Icon2 name="menu" /> and select "Forms". Also don't forget to fill out the
-            required fields.
+            If you want to submit a form, please click on the upper button <Icon2 name="menu" /> and select "Forms". Also don't forget to fill out the required
+            fields.
           </Text>
         </View>
       </Container>
